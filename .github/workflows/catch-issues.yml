@@ -1,16 +1,10 @@
 name: Issues Event Listener
 
-on:
-  issues:
-    types:
-      - opened
-      - edited
-      - closed
+on: issues
 
 jobs:
   issue_event:
     runs-on: ubuntu-latest
-
     steps:
       - name: output issue event
-        run: echo "${{ toJson(github.event) }}"
+        run: echo "${{ toJSON(github.event) }}"
