@@ -1,0 +1,39 @@
+name: Issues Event Listener
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - closed
+
+jobs:
+  issue_event:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract issue details
+        id: issue_details
+        run: |
+          echo "title=${{ github.event.issue.title }}" >> $GITHUB_ENV
+          echo "body=${{ github.event.issue.body }}" >> $GITHUB_ENV
+          echo "creator=${{ github.event.issue.user.login }}" >> $GITHUB_ENV
+          echo "action=${{ github.event.action }}" >> $GITHUB_ENV
+
+      - name: Output extracted values
+        run: |
+          echo "Issue Title: ${{ env.title }}"
+          echo "Issue Body: ${{ env.body }}"
+          echo "Issue Creator: ${{ env.creator }}"
+          echo "Issue Action: ${{ env.action }}"
+
+      - name: Conditional step - If issue is opened
+        if: github.event.action == 'opened'
+        run: echo "A new issue has been opened by ${{ env.creator }}!"
+
+      - name: Conditional step - If issue is closed
+        if: github.event.action == 'closed'
+        run: echo "Issue closed by ${{ env.creator }}"
