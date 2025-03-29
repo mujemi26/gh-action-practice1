@@ -17,13 +17,13 @@ jobs:
 
       - name: Extract issue details
         id: issue_details
-        run: |
-          echo "title=${{ github.event.issue.title }}" >> $GITHUB_ENV
-          echo "body=${{ github.event.issue.body }}" >> $GITHUB_ENV
-          echo "creator=${{ github.event.issue.user.login }}" >> $GITHUB_ENV
-          echo "action=${{ github.event.action }}" >> $GITHUB_ENV
+        env:
+          title: ${{ github.event.issue.title }}
+          body: ${{ github.event.issue.body }}
+          creator: ${{ github.event.issue.user.login }}
+          action: ${{ github.event.action }}
 
-      - name: Output extracted values
+      - name: Log extracted issue details
         run: |
           echo "Issue Title: ${{ env.title }}"
           echo "Issue Body: ${{ env.body }}"
@@ -31,9 +31,9 @@ jobs:
           echo "Issue Action: ${{ env.action }}"
 
       - name: Conditional step - If issue is opened
-        if: github.event.action == 'opened'
+        if: github.event.action == "opened"
         run: echo "A new issue has been opened by ${{ env.creator }}!"
 
       - name: Conditional step - If issue is closed
-        if: github.event.action == 'closed'
+        if: github.event.action == "closed"
         run: echo "Issue closed by ${{ env.creator }}"
